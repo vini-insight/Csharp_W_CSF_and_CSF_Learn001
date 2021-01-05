@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using Models;
 using MyValidations;
 
 //http://zetcode.com/csharp/mysql/
@@ -8,7 +9,7 @@ using MyValidations;
 // $ dotnet add package MySql.Data
 // for access MySql ADO.NET framerwork. Include the package to our .NET Core project.
 
-public class Pessoa
+public class Pessoa : RespostaHttp
 {    
     // public string Nome { get; set; } = "Zerezima";
     // public string Cpf { get; set; } = "00000000000";

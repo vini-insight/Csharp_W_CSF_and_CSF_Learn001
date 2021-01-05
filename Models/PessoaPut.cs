@@ -8,7 +8,7 @@ using MyValidations;
 // $ dotnet add package MySql.Data
 // for access MySql ADO.NET framerwork. Include the package to our .NET Core project.
 
-public class PessoaAux
+public class PessoaPut
 {    
     // public string Nome { get; set; } = "Zerezima";
     // public string Cpf { get; set; } = "00000000000";
@@ -17,15 +17,15 @@ public class PessoaAux
 
     // [StringLength(100)]
     // [ValidarNome(ErrorMessage = "NOME INVALIDO")]
-    [ValidarNome(ErrorMessage = "NOME INVALIDO")]
+    [ValidarNomeAux(ErrorMessage = "NOME INVALIDO")]
     public string Nome { get; set; }
 
     [Required(ErrorMessage = "O CPF é obrigatório", AllowEmptyStrings = false), StringLength(11, MinimumLength = 11)]
-    [ValidarCpf(ErrorMessage = "CPF INVALIDO")]
+    [ValidarCpfAux(ErrorMessage = "CPF INVALIDO")]
     public string Cpf { get; set; }
 
     // [DataType(DataType.Date)]
-    [ValidarData(ErrorMessage = "DATA INVALIDA")]
+    [ValidarDataAux(ErrorMessage = "DATA INVALIDA")]
     // [Required(AllowEmptyStrings = false), DataType(DataType.Date)]
     // [ValidarDataAux()]
     public string DataNascimento { get; set; }
@@ -33,6 +33,6 @@ public class PessoaAux
     // public char Sexo { get; set; }
 
     // [StringLength(1)]
-    [ValidarSexo(ErrorMessage = "SEXO INVALIDO")]
+    [ValidarSexoAux(ErrorMessage = "SEXO INVALIDO")]
     public string Sexo { get; set; }
 }

@@ -19,94 +19,59 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
         [HttpGet] // http://localhost:5000/pessoa/getall RETORNA todos
         public IActionResult GetMySql()
         {
-            try
-            {
-                return Ok(DB.BuscarNoBancoDados());
-            }
-            catch (Exception ex)
-            {         
-                return NotFound(ex.Message); // 404 não encontrado
-            }
+
+            List<Pessoa> retornada = DB.BuscarNoBancoDados();
+
+            // retornada.Clear(); // PARA TESTAR NOTFOUND
+
+            if(retornada.Count > 0) return Ok(retornada);
+            else return NotFound("LISTA VAZIA");
         }
 
         [HttpGet("{cpf}")] // http://localhost:5000/pessoa/1 RETORNA O SEGUNDO DA LISTA
         public IActionResult GetSingle(string cpf)
         {   
-            if ( ! ModelState.IsValid )
-            {
-                return BadRequest(ModelState);
-            }
+            if ( ! DB.VerificarCpf(cpf) ) return BadRequest("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
 
-            try
-            {
-                Pessoa p = new Pessoa { Cpf = cpf };                
-                return Ok(DB.GetPessoa(p));                
-            }
-            catch (Exception ex)
-            {         
-                return NotFound(ex.Message); // 404 não encontrado
-            }
+            Pessoa retornada = DB.GetPessoa(cpf);
+
+            if(retornada.Sucesso) return Ok(retornada);
+            else return NotFound(retornada.MensagemErro);
         }        
 
         [HttpPost] // http://localhost:5000/pessoa/ NO POSTMAN, CLICA EM BODY, DEPOISCLICA EM RAW, E AGORA CLICA EM JSON. PREENCHE O NOVO DADO EM JSON, E ENVIAR
         public IActionResult AddPessoaBd(Pessoa newPessoa)
         {
-            if ( ! ModelState.IsValid )
-            {
-                return BadRequest(ModelState);
-            }
+            if ( ! ModelState.IsValid ) return BadRequest(ModelState);
 
-            try
-            {
-                return Ok(DB.InserirNoBancoDados(newPessoa));
-            }
-            catch (Exception ex)
-            {             
-                return NotFound(ex.Message); // 404 não encontrado
-            }
+            Pessoa nova = DB.InserirNoBancoDados(newPessoa);
+
+            if(nova.Sucesso) return Ok(nova);
+            else return BadRequest(nova.MensagemErro);
         }
 
         
         [HttpPut]        
-        public IActionResult PutPessoaBd(PessoaAux update)
+        public IActionResult PutPessoaBd(PessoaPut update)
         {
-            if ( ! ModelState.IsValid )
-            {
-                return BadRequest(ModelState);
-            }
+            if ( ! ModelState.IsValid ) return BadRequest(ModelState);
 
-            Pessoa cpf = new Pessoa { Cpf = update.Cpf };
-            
-            try
-            {                
-                // Pessoa pessoa = DB.GetPessoa(update);           // possiveis melhorias: atualizar direto na quere UPDATE sem precisar getpessoa nem o atualizarpropriedades. fazer testes depois.     
-                Pessoa pessoa = DB.GetPessoa(cpf);
-                Pessoa aux = DB.AtualizarPropriedades(update, pessoa);
-                Pessoa atualizada = DB.AtualizarNoBancoDados(aux);
-                return Ok(atualizada);
-            }
-            catch (Exception ex)
-            {             
-                return NotFound(ex.Message); // 404 não encontrado
-            }            
+            Pessoa pessoa = DB.GetPessoa(update.Cpf); // possiveis melhorias: atualizar direto na quere UPDATE sem precisar getpessoa nem o atualizarpropriedades. fazer testes depois.
+            Pessoa aux = DB.AtualizarPropriedades(update, pessoa);
+            Pessoa atualizada = DB.AtualizarNoBancoDados(aux);
+
+            if(atualizada.Sucesso) return Ok(atualizada);
+            else return NotFound(atualizada.MensagemErro);
         }
         
         [HttpDelete("{cpf}")]
         public IActionResult DeletePessoaBd(string cpf)
         {
-            if ( ! ModelState.IsValid )
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                return Ok(DB.ApagarNoBancoDados(cpf)); // retorna apenas 200 se ok OU lança exceção
-            }
-            catch (Exception ex)
-            {         
-                return NotFound(ex.Message); // 404 não encontrado
-            }            
-        }        
+            if ( ! DB.VerificarCpf(cpf) ) return BadRequest("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
+            Pessoa p = DB.ApagarNoBancoDados(cpf);            
+            
+            if(p.Sucesso) return Ok(p);
+            else return NotFound(p.MensagemErro); // 404 não encontrado            
+        }
     }
 }

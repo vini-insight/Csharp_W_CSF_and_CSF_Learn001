@@ -1,7 +1,4 @@
-namespace 
+public class testedogit
 {
-    public class testedogit
-    {
-        // 
-    }
+    // 
 }
