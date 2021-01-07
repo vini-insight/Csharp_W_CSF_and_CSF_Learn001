@@ -17,7 +17,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
     public class PessoaController : ControllerBase
     {
         [HttpGet] // http://localhost:5000/pessoa/getall RETORNA todos
-        public IActionResult GetMySql()
+        public IActionResult GetAll()
         {
 
             List<Pessoa> retornada = DB.BuscarNoBancoDados();
@@ -40,7 +40,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
         }        
 
         [HttpPost] // http://localhost:5000/pessoa/ NO POSTMAN, CLICA EM BODY, DEPOISCLICA EM RAW, E AGORA CLICA EM JSON. PREENCHE O NOVO DADO EM JSON, E ENVIAR
-        public IActionResult AddPessoaBd(Pessoa newPessoa)
+        public IActionResult PostPessoa(Pessoa newPessoa)
         {
             if ( ! ModelState.IsValid ) return BadRequest(ModelState);
 
@@ -52,7 +52,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
 
         
         [HttpPut]        
-        public IActionResult PutPessoaBd(PessoaPut update)
+        public IActionResult PutPessoa(PessoaPut update)
         {
             if ( ! ModelState.IsValid ) return BadRequest(ModelState);
 
@@ -65,7 +65,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
         }
         
         [HttpDelete("{cpf}")]
-        public IActionResult DeletePessoaBd(string cpf)
+        public IActionResult DeletePessoa(string cpf)
         {
             if ( ! DB.VerificarCpf(cpf) ) return BadRequest("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
             Pessoa p = DB.ApagarNoBancoDados(cpf);            

@@ -10,24 +10,28 @@ namespace MyValidations
         {
             var inputValue = value as string;
 
-            if(inputValue.Length == 11)
+            if(inputValue != null)
             {
-                char[] chars = inputValue.ToCharArray();
-                for (int i = 0; i < chars.Length; i++)
+                if(inputValue.Length == 11)
                 {
-                    if (!char.IsDigit(chars[i]))
+                    char[] chars = inputValue.ToCharArray();
+                    for (int i = 0; i < chars.Length; i++)
                     {
-                        // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
-                        return false;
+                        if (!char.IsDigit(chars[i]))
+                        {
+                            // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
+                            return false;
+                        }
                     }
+                    return true;
                 }
-                return true;
+                else
+                {            
+                    // throw new Exception("CPF só tem 11 dígitos. você digitou mais (ou menos) do que 11");
+                    return false;
+                }
             }
-            else
-            {            
-                // throw new Exception("CPF só tem 11 dígitos. você digitou mais (ou menos) do que 11");
-                return false;
-            }
+            else return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
         }        
     }
 }

@@ -17,15 +17,15 @@ public class PessoaPut
 
     // [StringLength(100)]
     // [ValidarNome(ErrorMessage = "NOME INVALIDO")]
-    [ValidarNomeAux(ErrorMessage = "NOME INVALIDO")]
+    [ValidarNome(ErrorMessage = "NOME INVALIDO")]
     public string Nome { get; set; }
 
     [Required(ErrorMessage = "O CPF é obrigatório", AllowEmptyStrings = false), StringLength(11, MinimumLength = 11)]
-    [ValidarCpfAux(ErrorMessage = "CPF INVALIDO")]
+    [ValidarCpf(ErrorMessage = "CPF INVALIDO")]
     public string Cpf { get; set; }
 
     // [DataType(DataType.Date)]
-    [ValidarDataAux(ErrorMessage = "DATA INVALIDA")]
+    [ValidarData(ErrorMessage = "DATA INVALIDA")]
     // [Required(AllowEmptyStrings = false), DataType(DataType.Date)]
     // [ValidarDataAux()]
     public string DataNascimento { get; set; }
@@ -33,6 +33,6 @@ public class PessoaPut
     // public char Sexo { get; set; }
 
     // [StringLength(1)]
-    [ValidarSexoAux(ErrorMessage = "SEXO INVALIDO")]
+    [ValidarSexo(ErrorMessage = "SEXO INVALIDO")]
     public string Sexo { get; set; }
 }

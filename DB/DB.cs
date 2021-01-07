@@ -19,6 +19,7 @@ public static class DB
             cmd.CommandText = query;
             var linhasAfetadas = cmd.ExecuteNonQuery();
             // if (linhasAfetadas != 0) return p;
+            p.Sucesso = true;
             return p;
         }
         catch (Exception ex)
@@ -51,6 +52,7 @@ public static class DB
             // var linhasAfetadas = cmd.ExecuteNonQuery();
             // if (linhasAfetadas != 0) return p;            
             cmd.ExecuteNonQuery();
+            p.Sucesso = true;
             return p;
         }
         catch (Exception ex)
@@ -84,7 +86,7 @@ public static class DB
             string query = "DELETE FROM pessoas WHERE cpf = '" + cpf + "'";            
             cmd.CommandText = query;
             var linhasAfetadas = cmd.ExecuteNonQuery();            
-            if (linhasAfetadas != 0) return new Pessoa { Cpf = cpf };
+            if (linhasAfetadas != 0) return new Pessoa { Cpf = cpf, Sucesso = true };
             // if (linhasAfetadas != 0) return deletada;
             // else throw new Exception("NÃO ENCONTRADO");
             // else return null;
@@ -104,7 +106,7 @@ public static class DB
     public static List<Pessoa> BuscarNoBancoDados() // RETORNA TODAS AS PESSOAS NO BD
     {
         using var con = new MySqlConnection(CS);        
-        Pessoa aux = new Pessoa();
+        // Pessoa aux = new Pessoa();
         List<Pessoa> pessoas = new List<Pessoa>();
         try
         {
@@ -146,8 +148,7 @@ public static class DB
         using var con = new MySqlConnection(CS);
         try
         {            
-            con.Open();            
-            // string sql = "SELECT * FROM pessoas WHERE cpf = '" + p.Cpf + "'";
+            con.Open();                        
             string sql = "SELECT * FROM pessoas WHERE cpf = '" + cpf + "'";
             using var cmd = new MySqlCommand(sql, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();            
@@ -161,6 +162,7 @@ public static class DB
                     retornada.DataNascimento = rdr.GetString(3);                    
                     retornada.Sexo = rdr.GetString(4);
                 }
+                retornada.Sucesso = true;
                 return retornada;
             }
             // else throw new Exception("NÃO ENCONTRADO");
@@ -185,7 +187,7 @@ public static class DB
         return pessoa;
     }
     
-    public static bool VerificarCpf(string cpf)
+    public static bool VerificarCpf(string cpf) // para validar string cpf enviada na requisição de get by cpf e delete
     {
         if(cpf.Length == 11)
         {
