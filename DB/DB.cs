@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Models;
 using MySql.Data.MySqlClient;
 
 public static class DB
@@ -62,10 +63,6 @@ public static class DB
             erro.Sucesso = false;
             return erro;
         }
-        // catch (System.Exception)
-        // {
-        //     throw; // relança exceção e preserva a pilha stack trace
-        // }
         finally
         {
             con.Close();
@@ -102,39 +99,44 @@ public static class DB
         }
     }        
 
-    // public static string BuscarNoBancoDados() // RETORNA TODAS AS PESSOAS NO BD
-    public static List<Pessoa> BuscarNoBancoDados() // RETORNA TODAS AS PESSOAS NO BD
+    public static PessoaResposta GetListPessoa()
     {
-        using var con = new MySqlConnection(CS);        
-        // Pessoa aux = new Pessoa();
-        List<Pessoa> pessoas = new List<Pessoa>();
+        using var con = new MySqlConnection(CS);                
+        PessoaResposta resposta = new PessoaResposta();
         try
         {
             con.Open();
             string sql = "SELECT * FROM pessoas";
             using var cmd = new MySqlCommand(sql, con);
             using MySqlDataReader rdr = cmd.ExecuteReader();
-            // string consulta = "";
-            // if(rdr.HasRows) // se pesquisa bem sucedida
-            // {                                
+            
+            if(rdr.HasRows) // se pesquisa bem sucedida
+            {                                
                 while (rdr.Read())
                 {
-                    // Console.WriteLine("{0} {1} {2} {3} {4}", rdr.GetString(0), rdr.GetString(1), rdr.GetString(2), rdr.GetString(3), rdr.GetChar(4));
-                    // consulta += "" + rdr.GetString(1) + " " + rdr.GetString(2) + " " + rdr.GetString(3) + " " + rdr.GetChar(4) + "\n";
-                    // aux.Nome = rdr.GetString(1);
-                    // aux.Cpf = rdr.GetString(2);
-                    // aux.DataNascimento = rdr.GetString(3);                    
-                    // aux.Sexo = rdr.GetString(4);
-                    // new Pessoa { Nome = rdr.GetString(1), Cpf = rdr.GetString(2), DataNascimento = rdr.GetString(3), Sexo = rdr.GetString(4) };
-
-                    pessoas.Add(new Pessoa { Nome = rdr.GetString(1), Cpf = rdr.GetString(2), DataNascimento = rdr.GetString(3), Sexo = rdr.GetString(4) });
-                }
-                // return consulta;
-                return pessoas;             
+                    resposta.Pessoa.Add(new Pessoa
+                    {
+                        Nome = rdr.GetString(1),
+                        Cpf = rdr.GetString(2),
+                        DataNascimento = rdr.GetString(3),
+                        Sexo = rdr.GetString(4)
+                    });
+                }    
+                // resposta.Sucesso = true;
+                return resposta;
+            }
+            else
+            {
+                resposta.Sucesso = false;
+                resposta.MensagemErro = "LISTA VAZIA";
+                return resposta;
+            }
         }
-        catch (System.Exception)        
+        catch (Exception ex)
         {
-            throw; // relança exceção e preserva a pilha stack trace
+            resposta.Sucesso = false;
+            resposta.MensagemErro = ex.Message;
+            return resposta;
         }
         finally
         {
@@ -142,17 +144,16 @@ public static class DB
         }
     }
 
-    // public static Pessoa GetPessoa(Pessoa p)
     public static Pessoa GetPessoa(String cpf)
     {
         using var con = new MySqlConnection(CS);
+        Pessoa retornada = new Pessoa();
         try
         {            
             con.Open();                        
             string sql = "SELECT * FROM pessoas WHERE cpf = '" + cpf + "'";
             using var cmd = new MySqlCommand(sql, con);
-            using MySqlDataReader rdr = cmd.ExecuteReader();            
-            Pessoa retornada = new Pessoa();            
+            using MySqlDataReader rdr = cmd.ExecuteReader();              
             if(rdr.HasRows) // se pesquisa bem sucedida
             {
                 while (rdr.Read())
@@ -165,13 +166,19 @@ public static class DB
                 retornada.Sucesso = true;
                 return retornada;
             }
-            // else throw new Exception("NÃO ENCONTRADO");
-            else return new Pessoa { Sucesso = false, MensagemErro = "NÃO ENCONTRADO"};
+            else
+            {
+                retornada.Sucesso = false;
+                retornada.MensagemErro = "NÃO ENCONTRADO";
+                return retornada;
+            }
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
-            throw; // relança exceção e preserva a pilha stack trace
-        }
+            retornada.Sucesso = false;
+            retornada.MensagemErro = ex.Message;
+            return retornada;
+        }        
         finally
         {
             con.Close();
@@ -180,10 +187,14 @@ public static class DB
 
     public static Pessoa AtualizarPropriedades(PessoaPut update, Pessoa pessoa)
     {
-        if (update.Nome != null) pessoa.Nome = update.Nome;
-        if (update.Cpf != null) pessoa.Cpf = update.Cpf;
-        if (update.DataNascimento != null) pessoa.DataNascimento = update.DataNascimento;                
-        if (update.Sexo != null) pessoa.Sexo = update.Sexo.ToUpper();
+        if (update.Nome != null)
+            pessoa.Nome = update.Nome;
+        if (update.Cpf != null)
+            pessoa.Cpf = update.Cpf;
+        if (update.DataNascimento != null)
+            pessoa.DataNascimento = update.DataNascimento;                
+        if (update.Sexo != null)
+            pessoa.Sexo = update.Sexo.ToUpper();
         return pessoa;
     }
     
@@ -194,7 +205,8 @@ public static class DB
             char[] chars = cpf.ToCharArray();
             for (int i = 0; i < chars.Length; i++)
             {
-                if (!char.IsDigit(chars[i])) return false; // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");                
+                if (!char.IsDigit(chars[i]))
+                    return false; // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");                
             }            
             return true;
         }
