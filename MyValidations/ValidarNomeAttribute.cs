@@ -18,11 +18,11 @@ namespace MyValidations
                 }
                 else
                 {
-                    // throw new Exception("digite o Nome completo com espaços entre eles");
                     return false;
                 }
             }
-            else return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+            else
+                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
         }        
     }
 }

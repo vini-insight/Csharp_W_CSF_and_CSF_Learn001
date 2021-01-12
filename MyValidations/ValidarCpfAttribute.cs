@@ -19,19 +19,18 @@ namespace MyValidations
                     {
                         if (!char.IsDigit(chars[i]))
                         {
-                            // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
                             return false;
                         }
                     }
                     return true;
                 }
                 else
-                {            
-                    // throw new Exception("CPF só tem 11 dígitos. você digitou mais (ou menos) do que 11");
+                {
                     return false;
                 }
             }
-            else return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+            else
+                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
         }        
     }
 }

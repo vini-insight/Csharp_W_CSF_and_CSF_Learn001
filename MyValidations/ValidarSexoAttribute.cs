@@ -20,12 +20,12 @@ namespace MyValidations
                     return true;
                 }
                 else
-                {            
-                    // throw new Exception("Sexo inválido: use o formato F ou f ou M ou m. sexo não pode ser vazio");
+                {
                     return false;
                 }
             }
-            else return true; // se inputValue for igual a NULL retorna TRUE para passar na validação.
+            else
+                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação.
         }        
     }
 }

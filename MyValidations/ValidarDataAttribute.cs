@@ -19,12 +19,12 @@ namespace MyValidations
                     return true;
                 }
                 else
-                {            
-                    // throw new Exception("data inválida: use o formato DD/MM/AAAA");
+                {
                     return false;
                 }
             }
-            else return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+            else
+                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
         }        
     }
 }

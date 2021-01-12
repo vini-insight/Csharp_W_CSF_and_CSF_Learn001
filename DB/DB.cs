@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Models;
 using MySql.Data.MySqlClient;
 
@@ -19,9 +18,19 @@ public static class DB
             string query = "INSERT INTO pessoas (nome, cpf, dataNascimento, sexo) VALUES ('" + p.Nome + "', '" + p.Cpf + "', '" + p.DataNascimento + "', '" + p.Sexo + "')";            
             cmd.CommandText = query;
             var linhasAfetadas = cmd.ExecuteNonQuery();
-            // if (linhasAfetadas != 0) return p;
-            p.Sucesso = true;
-            return p;
+            if (linhasAfetadas != 0)
+            {
+                p.Sucesso = true;
+                return p;
+            }
+            else
+            {
+                return new Pessoa
+                {
+                    Sucesso = false,
+                    MensagemErro = "NÃO ADICIONADO"
+                };
+            }
         }
         catch (Exception ex)
         {            
@@ -29,11 +38,7 @@ public static class DB
             erro.MensagemErro = ex.Message;
             erro.Sucesso = false;
             return erro;
-        }    
-        // catch (System.Exception)
-        // {            
-        //     throw; // relança exceção e preserva a pilha stack trace
-        // }
+        }
         finally
         {
             con.Close();
@@ -50,11 +55,20 @@ public static class DB
             cmd.Connection = con;
             string query = "UPDATE pessoas SET nome = '" + p.Nome + "', cpf = '" + p.Cpf + "', dataNascimento = '" + p.DataNascimento + "', sexo = '" + p.Sexo + "' WHERE cpf = '" + p.Cpf + "'";                
             cmd.CommandText = query;
-            // var linhasAfetadas = cmd.ExecuteNonQuery();
-            // if (linhasAfetadas != 0) return p;            
-            cmd.ExecuteNonQuery();
-            p.Sucesso = true;
-            return p;
+            var linhasAfetadas = cmd.ExecuteNonQuery();            
+            if (linhasAfetadas != 0)
+            {
+                p.Sucesso = true;
+                return p;
+            }
+            else
+            {
+                return new Pessoa
+                {
+                    Sucesso = false,
+                    MensagemErro = "NÃO ATUALIZADO"
+                };
+            }
         }
         catch (Exception ex)
         {            
@@ -74,20 +88,28 @@ public static class DB
         using var con = new MySqlConnection(CS);
         try       
         {
-            // Pessoa deletada = new Pessoa { Cpf = cpf };
-            // deletada = GetPessoa(deletada);
-
             con.Open();            
             using var cmd = new MySqlCommand();
             cmd.Connection = con;
             string query = "DELETE FROM pessoas WHERE cpf = '" + cpf + "'";            
             cmd.CommandText = query;
             var linhasAfetadas = cmd.ExecuteNonQuery();            
-            if (linhasAfetadas != 0) return new Pessoa { Cpf = cpf, Sucesso = true };
-            // if (linhasAfetadas != 0) return deletada;
-            // else throw new Exception("NÃO ENCONTRADO");
-            // else return null;
-            else return new Pessoa { Sucesso = false, MensagemErro = "NÃO ENCONTRADO"};
+            if (linhasAfetadas != 0)
+            {
+                return new Pessoa
+                {
+                    Cpf = cpf,
+                    Sucesso = true
+                };            
+            }
+            else
+            {
+                return new Pessoa
+                {
+                    Sucesso = false,
+                    MensagemErro = "NÃO ENCONTRADO"
+                };
+            }
         }
         catch (System.Exception)
         {
@@ -206,7 +228,7 @@ public static class DB
             for (int i = 0; i < chars.Length; i++)
             {
                 if (!char.IsDigit(chars[i]))
-                    return false; // throw new Exception("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");                
+                    return false;
             }            
             return true;
         }

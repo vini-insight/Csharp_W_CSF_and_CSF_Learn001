@@ -2,9 +2,8 @@ using System;
 
 public class CpfJaExiste : Exception
 {
-    public CpfJaExiste() : base ("Já existe alguém com este Cpf")
+    public CpfJaExiste(string msg) : base (msg)
     {
         // 
     }
-    // throw new Exception("Já existe alguém com este Cpf");    
 }
