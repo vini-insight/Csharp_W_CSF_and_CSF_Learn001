@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/laLp7JTEptAbWRuLgfOMC3LScCfcfwa7QvXx8uqgaJ9vy4k1muXdLuHIDuXiaDJg5O7CGmnMUQzcW376ctt3w==",
+  "dgSpecHash": "mW8A4JkAP7qNQ5ImQEuHEKXOtwJEEDD97T5Jk3D87aeyDheISzosZEFR08JMSBtDec8gFhkI5c7RbdB8Tj+mgA==",
   "success": true,
   "projectFilePath": "G:\\GitHub\\Csharp_W_CSF_and_CSF_Learn001\\Csharp_W_CSF_and_CSF_Learn001.csproj",
   "expectedPackageFiles": [
@@ -97,9 +97,7 @@
     "C:\\Users\\Twister\\.nuget\\packages\\system.xml.xdocument\\4.0.11\\system.xml.xdocument.4.0.11.nupkg.sha512",
     "C:\\Users\\Twister\\.nuget\\packages\\system.xml.xmldocument\\4.0.1\\system.xml.xmldocument.4.0.1.nupkg.sha512",
     "C:\\Users\\Twister\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512",
-    "C:\\Users\\Twister\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.0.1\\system.xml.xpath.xmldocument.4.0.1.nupkg.sha512",
-    "C:\\Users\\Twister\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
-    "C:\\Users\\Twister\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.10\\microsoft.netcore.app.host.win-x64.3.1.10.nupkg.sha512"
+    "C:\\Users\\Twister\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.0.1\\system.xml.xpath.xmldocument.4.0.1.nupkg.sha512"
   ],
   "logs": []
 }

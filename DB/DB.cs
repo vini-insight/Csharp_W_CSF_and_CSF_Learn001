@@ -3,18 +3,25 @@ using Models;
 using MySql.Data.MySqlClient;
 
 public static class DB
-{
+{    
     private const string CS = @"server=localhost;userid=root;password=root;database=nodejs";
+    private static MySqlConnection con;
+    private static MySqlCommand cmd;
+
+    static DB()
+    {
+        con = new MySqlConnection(CS);
+        cmd = new MySqlCommand();
+        // con.Open(); // Connection must be valid and open.
+    }
     
     public static Pessoa InserirNoBancoDados(Pessoa p)
-    {          
-        using var con = new MySqlConnection(CS);  
+    {
         try
         {
             p.Sexo = p.Sexo.ToUpper();            
-            con.Open();            
-            using var cmd = new MySqlCommand();
-            cmd.Connection = con;
+            con.Open();
+            cmd.Connection = con;            
             string query = "INSERT INTO pessoas (nome, cpf, dataNascimento, sexo) VALUES ('" + p.Nome + "', '" + p.Cpf + "', '" + p.DataNascimento + "', '" + p.Sexo + "')";            
             cmd.CommandText = query;
             var linhasAfetadas = cmd.ExecuteNonQuery();
@@ -25,19 +32,20 @@ public static class DB
             }
             else
             {
-                return new Pessoa
-                {
-                    Sucesso = false,
-                    MensagemErro = "NÃO ADICIONADO"
-                };
+                p.Sucesso = false;
+                p.MensagemErro = "NÃO ADICIONADA";
+                return p;
+                // A MESMA PESSOA PODE SER RETORNADA EM VEZ DE CRIAR UMA NOVA.
+                // pesquisar dispose e metodo destrutor e construtor estático.
+                // pode retornar Pessoa aqui mas não respostahttp pois essa é apenas da controler.
+                // ConsoleCancelEventArgs com opern e mysqlcomand dentro do consturtor estatico
             }
         }
         catch (Exception ex)
         {            
-            Pessoa erro = new Pessoa();
-            erro.MensagemErro = ex.Message;
-            erro.Sucesso = false;
-            return erro;
+            p.MensagemErro = ex.Message;
+            p.Sucesso = false;
+            return p;    
         }
         finally
         {
@@ -46,12 +54,10 @@ public static class DB
     }
 
     public static Pessoa AtualizarNoBancoDados(Pessoa p)
-    {          
-        using var con = new MySqlConnection(CS);  
+    {
         try
         {
-            con.Open();            
-            using var cmd = new MySqlCommand();
+            con.Open();
             cmd.Connection = con;
             string query = "UPDATE pessoas SET nome = '" + p.Nome + "', cpf = '" + p.Cpf + "', dataNascimento = '" + p.DataNascimento + "', sexo = '" + p.Sexo + "' WHERE cpf = '" + p.Cpf + "'";                
             cmd.CommandText = query;
@@ -63,19 +69,16 @@ public static class DB
             }
             else
             {
-                return new Pessoa
-                {
-                    Sucesso = false,
-                    MensagemErro = "NÃO ATUALIZADO"
-                };
+                p.Sucesso = false;
+                p.MensagemErro = "NÃO ATUALIZADO";
+                return p;
             }
         }
         catch (Exception ex)
-        {            
-            Pessoa erro = new Pessoa();
-            erro.MensagemErro = ex.Message;
-            erro.Sucesso = false;
-            return erro;
+        {   
+            p.Sucesso = false;
+            p.MensagemErro = ex.Message;
+            return p;
         }
         finally
         {
@@ -84,53 +87,58 @@ public static class DB
     }
 
     public static Pessoa ApagarNoBancoDados(string cpf)
-    {    
-        using var con = new MySqlConnection(CS);
-        try       
+    {
+        Pessoa p = DB.GetPessoa(cpf);
+        if (p.Sucesso)
         {
-            con.Open();            
-            using var cmd = new MySqlCommand();
-            cmd.Connection = con;
-            string query = "DELETE FROM pessoas WHERE cpf = '" + cpf + "'";            
-            cmd.CommandText = query;
-            var linhasAfetadas = cmd.ExecuteNonQuery();            
-            if (linhasAfetadas != 0)
+            try       
             {
-                return new Pessoa
+                con.Open();
+                cmd.Connection = con;
+                string query = "DELETE FROM pessoas WHERE cpf = '" + cpf + "'";            
+                cmd.CommandText = query;
+                var linhasAfetadas = cmd.ExecuteNonQuery();            
+                if (linhasAfetadas != 0)
                 {
-                    Cpf = cpf,
-                    Sucesso = true
-                };            
+                    p.Sucesso = true;
+                    return p;
+                }
+                else
+                {
+                    p.Sucesso = false;
+                    p.MensagemErro = "NÃO ENCONTRADO";
+                    return p;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new Pessoa
-                {
-                    Sucesso = false,
-                    MensagemErro = "NÃO ENCONTRADO"
-                };
+                p.Sucesso = false;
+                p.MensagemErro = ex.Message;
+                return p;
+            }
+            finally
+            {
+                con.Close();
             }
         }
-        catch (System.Exception)
+        else
         {
-            throw;
-        }
-        finally
-        {
-            con.Close();
+            p.Sucesso = false;
+            p.MensagemErro = "NÃO ENCONTRADO";
+            return p;
         }
     }        
 
     public static PessoaResposta GetListPessoa()
     {
-        using var con = new MySqlConnection(CS);                
         PessoaResposta resposta = new PessoaResposta();
         try
         {
-            con.Open();
-            string sql = "SELECT * FROM pessoas";
-            using var cmd = new MySqlCommand(sql, con);
-            using MySqlDataReader rdr = cmd.ExecuteReader();
+            con.Open(); // Connection must be valid and open.
+            cmd.Connection = con;
+            string query = "SELECT * FROM pessoas";
+            cmd.CommandText = query;
+            MySqlDataReader rdr = cmd.ExecuteReader();
             
             if(rdr.HasRows) // se pesquisa bem sucedida
             {                                
@@ -168,14 +176,15 @@ public static class DB
 
     public static Pessoa GetPessoa(String cpf)
     {
-        using var con = new MySqlConnection(CS);
         Pessoa retornada = new Pessoa();
         try
         {            
-            con.Open();                        
-            string sql = "SELECT * FROM pessoas WHERE cpf = '" + cpf + "'";
-            using var cmd = new MySqlCommand(sql, con);
-            using MySqlDataReader rdr = cmd.ExecuteReader();              
+            con.Open();
+            cmd.Connection = con;
+            string query = "SELECT * FROM pessoas WHERE cpf = '" + cpf + "'";
+            cmd.CommandText = query;
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
             if(rdr.HasRows) // se pesquisa bem sucedida
             {
                 while (rdr.Read())
