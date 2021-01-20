@@ -14,7 +14,7 @@ namespace MyValidations
             if(inputValue != null)
             {
 
-                if (DateTime.TryParse(inputValue, out dateValue) && dateValue <= DateTime.Today) // datas com formato correto e não podem ser datas futuras
+                if (DateTime.TryParse(inputValue, out dateValue) && dateValue <= DateTime.Today)
                 {            
                     return true;
                 }
@@ -24,7 +24,7 @@ namespace MyValidations
                 }
             }
             else
-                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+                return true;
         }        
     }
 }

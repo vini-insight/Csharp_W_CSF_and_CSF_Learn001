@@ -12,7 +12,7 @@ namespace MyValidations
 
             if(inputValue != null)
             {
-                if(inputValue.Contains(" ")) // se um Nome tem espaços é porque tem pelo menos duas palavras na string
+                if(inputValue.Contains(" "))
                 {                    
                     return true;
                 }
@@ -22,7 +22,7 @@ namespace MyValidations
                 }
             }
             else
-                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+                return true;
         }        
     }
 }

@@ -30,7 +30,7 @@ namespace MyValidations
                 }
             }
             else
-                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação
+                return true;
         }        
     }
 }

@@ -15,7 +15,7 @@ namespace MyValidations
 
                 inputValue = inputValue.ToUpper();
                 
-                if(inputValue.Equals("F") || inputValue.Equals("M")) // só é válido se for qualquer uma dessas opções           
+                if(inputValue.Equals("F") || inputValue.Equals("M"))
                 {
                     return true;
                 }
@@ -25,7 +25,7 @@ namespace MyValidations
                 }
             }
             else
-                return true; // se inputValue for igual a NULL retorna TRUE para passar na validação.
+                return true;
         }        
     }
 }

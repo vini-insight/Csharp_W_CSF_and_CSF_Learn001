@@ -12,7 +12,6 @@ public static class DB
     {
         con = new MySqlConnection(CS);
         cmd = new MySqlCommand();
-        // con.Open(); // Connection must be valid and open.
     }
     
     public static Pessoa InserirNoBancoDados(Pessoa p)
@@ -35,10 +34,6 @@ public static class DB
                 p.Sucesso = false;
                 p.MensagemErro = "NÃO ADICIONADA";
                 return p;
-                // A MESMA PESSOA PODE SER RETORNADA EM VEZ DE CRIAR UMA NOVA.
-                // pesquisar dispose e metodo destrutor e construtor estático.
-                // pode retornar Pessoa aqui mas não respostahttp pois essa é apenas da controler.
-                // ConsoleCancelEventArgs com opern e mysqlcomand dentro do consturtor estatico
             }
         }
         catch (Exception ex)
@@ -134,13 +129,12 @@ public static class DB
         PessoaResposta resposta = new PessoaResposta();
         try
         {
-            con.Open(); // Connection must be valid and open.
+            con.Open();
             cmd.Connection = con;
             string query = "SELECT * FROM pessoas";
             cmd.CommandText = query;
             MySqlDataReader rdr = cmd.ExecuteReader();
-            
-            if(rdr.HasRows) // se pesquisa bem sucedida
+            if(rdr.HasRows)
             {                                
                 while (rdr.Read())
                 {
@@ -152,7 +146,7 @@ public static class DB
                         Sexo = rdr.GetString(4)
                     });
                 }    
-                // resposta.Sucesso = true;
+                resposta.Sucesso = true;
                 return resposta;
             }
             else
@@ -184,8 +178,7 @@ public static class DB
             string query = "SELECT * FROM pessoas WHERE cpf = '" + cpf + "'";
             cmd.CommandText = query;
             MySqlDataReader rdr = cmd.ExecuteReader();
-
-            if(rdr.HasRows) // se pesquisa bem sucedida
+            if(rdr.HasRows)
             {
                 while (rdr.Read())
                 {
@@ -228,8 +221,8 @@ public static class DB
             pessoa.Sexo = update.Sexo.ToUpper();
         return pessoa;
     }
-    
-    public static bool VerificarCpf(string cpf) // para validar string cpf enviada na requisição de get by cpf e delete
+
+    public static bool ValidarStringCpf(string cpf)
     {
         if(cpf.Length == 11)
         {
