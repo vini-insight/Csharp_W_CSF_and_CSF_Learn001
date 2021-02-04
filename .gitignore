@@ -1,10 +1,13 @@
+# todos com a extensão abaixo
 *.dll
 *.pdb
+# a pasta completa
 obj/
 bin/
+# pastas ocultas também
 .vscode/
 .git/
-obj/Debug/
+
 
 
 
