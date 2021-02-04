@@ -1,2 +1,10 @@
 *.dll
 *.pdb
+obj/
+bin/
+.vscode/
+.git/
+obj/Debug/
+
+
+
