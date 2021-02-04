@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Models;
 using MySql.Data.MySqlClient;
 
@@ -126,7 +127,8 @@ public static class DB
 
     public static PessoaResposta GetListPessoa()
     {
-        PessoaResposta resposta = new PessoaResposta();
+        IList<Pessoa> Pessoa = new List<Pessoa>();    
+        PessoaResposta resposta = new PessoaResposta(Pessoa);
         try
         {
             con.Open();
@@ -138,14 +140,14 @@ public static class DB
             {                                
                 while (rdr.Read())
                 {
-                    resposta.Pessoa.Add(new Pessoa
+                    Pessoa.Add(new Pessoa
                     {
                         Nome = rdr.GetString(1),
                         Cpf = rdr.GetString(2),
                         DataNascimento = rdr.GetString(3),
                         Sexo = rdr.GetString(4)
                     });
-                }    
+                }
                 resposta.Sucesso = true;
                 return resposta;
             }

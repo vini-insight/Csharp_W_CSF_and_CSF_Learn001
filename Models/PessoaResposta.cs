@@ -1,14 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Models
 {
     public class PessoaResposta : RespostaHttp
     {
-        public List<Pessoa> Pessoa { get; set; }
+        public IList<Pessoa> Pessoa { get; set; }
         
-        public PessoaResposta()
+        public PessoaResposta(IList<Pessoa> Pessoa)
         {
-            Pessoa = new List<Pessoa>();
+            this.Pessoa = Pessoa;
         }
     }
 }
