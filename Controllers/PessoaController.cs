@@ -50,7 +50,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
             Pessoa pessoa = DB.GetPessoa(update.Cpf);
             if (pessoa.Sucesso)
             {
-                Pessoa aux = DB.AtualizarPropriedades(update, pessoa);                
+                Pessoa aux = DB.AtualizarPropriedades(update, pessoa);
                 pessoa = DB.AtualizarNoBancoDados(aux);
             }
             if(pessoa.Sucesso)
@@ -64,7 +64,7 @@ namespace Csharp_W_CSF_and_CSF_Learn001.Controllers
         {
             if ( ! DB.ValidarStringCpf(cpf) )
                 return BadRequest("DIGITE APENAS OS NUMEROS, sem pontos, virugulas, traços, espaços nem letras");
-            Pessoa p = DB.ApagarNoBancoDados(cpf);            
+            Pessoa p = DB.ApagarNoBancoDados(cpf);
             if(p.Sucesso)
                 return Ok(p);
             else
